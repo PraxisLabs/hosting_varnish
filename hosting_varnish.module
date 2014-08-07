@@ -27,6 +27,7 @@ function hosting_varnish_menu() {
     'weight' => 5,
   );
 
+// This doesn't work until cache clear?
   if (hosting_feature('varnish')) {
     $items['admin/hosting/varnish'] = array(
       'title' => 'Varnish integration',
