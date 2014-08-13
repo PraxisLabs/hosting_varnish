@@ -113,17 +113,11 @@ function hosting_varnish_platform_settings($form_state, $platform) {
 
   $nid = $platform->nid;
 
-  $form['hosting_varnish_clear_cache' . '_' . $nid] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Clear cache'),
-  );
-
-  $form['hosting_varnish_caching' . '_' . $nid] = array(
+  $form['caching'] = array(
     '#type' => 'fieldset',
     '#title' => t('Caching'),
   );
 
-//  $cache = variable_get('cache', 0);
   $cache = variable_get('hosting_varnish_cache' . '_' . $nid, TRUE);
   $form['caching']['hosting_varnish_cache' . '_' . $nid] = array(
     '#type' => 'checkbox',
@@ -131,6 +125,15 @@ function hosting_varnish_platform_settings($form_state, $platform) {
     '#default_value' => $cache,
     '#weight' => -2,
   );
+
+
+  $block_cache = variable_get('hosting_varnish_block_cache' . '_' . $nid, FALSE);
+  $form['caching']['hosting_varnish_block_cache' . '_' . $nid] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Cache blocks'),
+    '#default_value' => $block_cache,
+  );
+
   $period = drupal_map_assoc(array(0, 60, 180, 300, 600, 900, 1800, 2700, 3600, 10800, 21600, 32400, 43200, 86400), 'format_interval');
   $period[0] = '<' . t('none') . '>';
   $form['caching']['hosting_varnish_cache_lifetime' . '_' . $nid] = array(
@@ -165,13 +168,13 @@ function hosting_varnish_platform_settings($form_state, $platform) {
   $form['bandwidth_optimization']['hosting_varnish_preprocess_css' . '_' . $nid] = array(
     '#type' => 'checkbox',
     '#title' => t('Aggregate and compress CSS files.'),
-    '#default_value' => variable_get('hosting_varnish_preprocess_js' . '_' . $nid, 0),
+    '#default_value' => variable_get('hosting_varnish_preprocess_css' . '_' . $nid, 0),
   );
 
   $form['bandwidth_optimization']['hosting_varnish_preprocess_js' . '_' . $nid] = array(
     '#type' => 'checkbox',
     '#title' => t('Aggregate JavaScript files.'),
-    '#default_value' => variable_get('hosting_varnish_preprocess_css' . '_' . $nid, 0),
+    '#default_value' => variable_get('hosting_varnish_preprocess_js' . '_' . $nid, 0),
   );
 
   return system_settings_form($form);
