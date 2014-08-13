@@ -8,7 +8,7 @@
  * Implements hook_perm().
  */
 function hosting_varnish_perm() {
-  return array('purge varnish cache');
+  return array('purge varnish cache', 'configure default varnish settings');
 }
 
 /**
@@ -22,6 +22,16 @@ function hosting_varnish_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('hosting_varnish_node_purge_cache', 1),
     'access callback' => 'hosting_varnish_check_valid_site',
+    'access arguments' => array(1),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 5,
+  );
+
+  $items['node/%node/hosting-varnish-platform'] = array(
+    'title' => 'Varnish settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('hosting_varnish_platform_settings', 1),
+    'access callback' => 'hosting_varnish_check_valid_platform',
     'access arguments' => array(1),
     'type' => MENU_LOCAL_TASK,
     'weight' => 5,
@@ -53,7 +63,7 @@ function hosting_varnish_check_valid_site($site) {
   if (!user_access('purge varnish cache')) {
     return FALSE;
   }
-
+              
   if ($site->type != 'site') {
     return FALSE;
   }
@@ -67,6 +77,40 @@ function hosting_varnish_check_valid_site($site) {
   }
 
   return FALSE;
+}
+
+function hosting_varnish_check_valid_platform($platform) {
+  if (!hosting_feature('varnish')) {
+    return FALSE;
+  }
+
+  if (!user_access('configure default varnish settings')) {
+    return FALSE;
+  }
+
+  if ($platform->type != 'platform') {
+    return FALSE;
+  }
+
+  $web_servers = array();
+  if (hosting_feature('server')) {
+    $web_servers = variable_get('hosting_varnish_web_servers', array());
+  }
+  if (empty($web_servers) || in_array($platform->web_server, $web_servers)) {
+    return TRUE;
+  }
+
+  return FALSE;
+}
+
+function hosting_varnish_platform_settings($form_state, $site) {
+  $form = array();
+
+  $form['test'] = array(
+    '#value' => 'test',
+  );
+
+  return $form;
 }
 
 /**
