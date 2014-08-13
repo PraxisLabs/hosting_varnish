@@ -88,6 +88,11 @@ function hosting_varnish_check_valid_platform($platform) {
     return FALSE;
   }
 
+  // Only support Drupal 7
+  if (substr($platform->release->version_code, 0, 1) != '7') {
+    return FALSE;
+  }
+
   if ($platform->type != 'platform') {
     return FALSE;
   }
@@ -170,10 +175,6 @@ function hosting_varnish_platform_settings($form_state, $platform) {
   );
 
   return system_settings_form($form);
-}
-
-function hosting_varnish_platform_settings_submit($form, &$form_state) {
-  dsm('butts');
 }
 
 /**
