@@ -7,8 +7,6 @@ function hosting_varnish_post_hosting_install_task($task, $data) {
   if ($task->ref->type == 'site') {
     $hosting_name = $task->ref->hosting_name;
 
-    drush_log('Enabling cache settings for ' . $hosting_name);
-    
     $cache_vars = array(
       'cache',
       'block_cache',
@@ -18,6 +16,15 @@ function hosting_varnish_post_hosting_install_task($task, $data) {
       'preprocess_css',
       'preprocess_js',
     );
+
+    $active = variable_get('hosting_varnish_active' . '_' . $task->ref->platform, NULL);
+
+    if ($active != TRUE) {
+      drush_log('Automatic cache settings not activated for this platform, moving on.');
+      return;
+    }
+
+    drush_log('Enabling cache settings for ' . $hosting_name);
 
     // Iterate over possible variables and set them in the site
     foreach ($cache_vars as $varname) {

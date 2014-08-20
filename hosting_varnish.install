@@ -9,4 +9,28 @@
  */
 function hosting_varnish_uninstall() {
   variable_del('hosting_varnish_web_servers');
+
+  // Clean up variables
+  $query = db_query("SELECT nid FROM {node} WHERE type='platform'");
+
+  $cache_vars = array(
+    'active',
+    'cache',
+    'block_cache',
+    'cache_lifetime',
+    'page_cache_maximum_age',
+    'page_compression',
+    'preprocess_css',
+    'preprocess_js',
+  );
+
+  while ($row = db_fetch_object($query)) {
+      $nid = $row->nid;
+
+      foreach ($cache_vars as $varname) {
+        $hosting_varnish_varname = 'hosting_varnish_' . $varname . '_' . $row->nid;
+        $names[] = $hosting_varnish_varname;
+        variable_del($hosting_varnish_varname);
+      }
+  }
 }

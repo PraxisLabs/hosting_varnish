@@ -115,6 +115,15 @@ function hosting_varnish_platform_settings($form_state, $platform) {
     '#title' => t('Caching'),
   );
 
+  $active = variable_get('hosting_varnish_active' . '_' . $nid, FALSE);
+  $form['hosting_varnish_active' . '_' . $nid] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Activate automatic settings for sites on this platform'),
+    '#description' => t('Other settings will be ignored if this is disabled.'),
+    '#default_value' => $active,
+    '#weight' => -100,
+  );
+
   $cache = variable_get('hosting_varnish_cache' . '_' . $nid, TRUE);
   $form['caching']['hosting_varnish_cache' . '_' . $nid] = array(
     '#type' => 'checkbox',
