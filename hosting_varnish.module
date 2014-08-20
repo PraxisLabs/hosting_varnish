@@ -37,17 +37,14 @@ function hosting_varnish_menu() {
     'weight' => 5,
   );
 
-// This doesn't work until cache clear?
-  if (hosting_feature('varnish')) {
-    $items['admin/hosting/varnish'] = array(
-      'title' => 'Varnish integration',
-      'page callback' => 'drupal_get_form',
-      'page arguments' => array('hosting_varnish_settings_form'),
-      'access arguments' => array('administer varnish'),
-      'type' => MENU_LOCAL_TASK,
-      'file' => 'hosting_varnish.admin.inc',
-    );
-  }
+  $items['admin/hosting/varnish'] = array(
+    'title' => 'Varnish integration',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('hosting_varnish_settings_form'),
+    'access arguments' => array('administer varnish'),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'hosting_varnish.admin.inc',
+  );
 
   return $items;
 }
